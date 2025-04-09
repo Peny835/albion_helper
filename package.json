@@ -1,0 +1,34 @@
+{
+  "name": "auros.ts",
+  "version": "0.0.1",
+  "description": "A discord bot written in TypeScript",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Peny835/Auros.TS.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "ts"
+  ],
+  "author": "Peny825",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Peny835/Auros.TS/issues"
+  },
+  "homepage": "https://github.com/Peny835/Auros.TS#readme",
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "tsx": "^4.19.3"
+  }
+}
