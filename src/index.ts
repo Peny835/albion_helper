@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import { Client } from 'discord.js';
+const { handleEvents } = require('./handlers/eventHandler');
+
 
 const client = new Client({
     intents: [
@@ -9,11 +11,6 @@ const client = new Client({
     ],
 });
 
-
-console.log('Hello, world!');
-
-client.once('ready', (c) => {
-    console.log(`Logged in as ${c.user?.tag}`);
-});
+handleEvents(client);
 
 client.login(process.env.BOT_TOKEN)
