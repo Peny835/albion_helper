@@ -3,12 +3,12 @@ const { getAllFiles } = require('./getAllFiles');
 const path = require('path');
 import axios from 'axios';
 
-export interface GetAllCommandsOptions {
+export interface getAllCommandsOptions {
     local?: boolean;
     guild?: string;
 }
 
-export async function GetAllCommands (client: any, options: GetAllCommandsOptions) {
+export async function getAllCommands (client: any, options: getAllCommandsOptions) {
 
     const { local, guild } = options;
     let commands: any[] = [];
@@ -39,6 +39,7 @@ export async function GetAllCommands (client: any, options: GetAllCommandsOption
             const applicationId = client.user.id;
             const token = client.token;
             const url = guild ? `https://discord.com/api/v9/applications/${applicationId}/guilds/${guild}/commands` : `https://discord.com/api/v9/applications/${applicationId}/commands`;
+
 
             try {
 

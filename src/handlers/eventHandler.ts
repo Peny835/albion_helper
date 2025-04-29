@@ -11,11 +11,22 @@ export function handleEvents (client: any) {
         const event = require(`../../${modulePath}`);
         const eventName = modulePath.split('/')[2]
 
-        if (event.once) {
-            client.once(eventName, (...args: any) => event.execute(...args, client));
+        if (!event.execute) {
+            log.error(`Event ${modulePath} does not have an execute function`);
+            return;
         }
-        if (!event.once) {
-            client.on(eventName, (...args: any) => event.execute(...args, client));
+
+        try {
+            if (event.once) {
+                client.once(eventName, (...args: any) => event.execute(...args, client));
+            }
+
+            if (!event.once) {
+                client.on(eventName, (...args: any) => event.execute(...args, client));
+            }
+
+        }catch (error) {
+            log.error(`Error loading event ${eventName}: ${error}`);
         }
     });
 }

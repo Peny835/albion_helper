@@ -36,8 +36,11 @@ function info(...args: any[]) {
 }
 
 function debug(...args: any[]) {
-    const date = getDate();
-    console.log(date, chalk.cyan(`[DEBUG]`), ...args);
+
+    if (process.env.DEBUG) {
+        const date = getDate();
+        console.log(date, chalk.cyan(`[DEBUG]`), ...args);
+    }
 }
 
 function success(...args: any[]) {
@@ -45,8 +48,7 @@ function success(...args: any[]) {
     console.log(date, chalk.green(`[SUCCESS]`), ...args);
 }
 
-
-module.exports = {
+export = {
     log,
     error,
     warn,
