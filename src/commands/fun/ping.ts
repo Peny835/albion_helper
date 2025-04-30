@@ -27,7 +27,12 @@ export const data = new SlashCommandBuilder()
                     )
                 )
     )
-    execute : async (interaction: any) => {
-        const message = interaction.options.getString('message') || 'Pong!';
-        await interaction.reply(message);
+    export async function execute(interaction: any) {
+        await interaction.reply({ content: 'Pong!', ephemeral: true });
+        console.log(interaction.options.getSubcommandGroup(false));
+        console.log(interaction.options.getSubcommand(false));
+        console.log(interaction.options.getString('messagse', false));
+        console.log(interaction.options.getString('messagse2', false));
+    }
+    export const config = {
     }

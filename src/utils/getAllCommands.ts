@@ -21,9 +21,11 @@ export async function getAllCommands (client: any, options: getAllCommandsOption
             commandFiles.forEach((file: any) => {
                 const modulePath = path.join(process.cwd(), file);
                 try{
+                    
                     const command = require(modulePath);
-                    if (command.data) {
-                        commands.push(command.data.toJSON());
+
+                    if (command) {
+                        commands.push(command);
                     } else {
                         log.error(`Command ${file} does not have a data property`);
                     }
@@ -55,7 +57,7 @@ export async function getAllCommands (client: any, options: getAllCommandsOption
                 log.error(`Error getting global commands: ${error}`);
             }
         }
-    
+
         return commands;
     
     }catch (error) {

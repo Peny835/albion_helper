@@ -13,8 +13,9 @@ export = {
             const slashCommands = await getAllCommands(client, { local: false, guild: guild});
         
 
-                for (const command of localCommands) {
-    
+                for (const commandData of localCommands) {
+                    
+                    const command = commandData.data.toJSON();
                     const match = slashCommands.find((c: any) => c.name === command.name);
 
                     if (match) {
@@ -65,8 +66,8 @@ export = {
                 
                 for (const slashCommand of slashCommands) {
                     
-                    const localMatch = localCommands.find((c: any) => c.name === slashCommand.name);
-        
+                    const localMatch = localCommands.find((c: any) => c.data.name === slashCommand.name);
+                    
                     if (!localMatch) {
                         
                         await axios.delete(guild ? `https://discord.com/api/v9/applications/${client.user.id}/guilds/${guild}/commands/${slashCommand.id}` : `https://discord.com/api/v9/applications/${client.user.id}/commands/${slashCommand.id}`, {

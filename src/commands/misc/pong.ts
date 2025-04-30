@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js";
 
 export const data = new SlashCommandBuilder()
     .setName('ping')
@@ -67,3 +67,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const stringOption = interaction.options.getString('string') || 'Hello!';
     await interaction.reply(`Pong! ${message} ${number} ${boolean} ${user} ${channel} ${role} ${attachment} ${mentionable} ${floatNumber} ${stringOption}`);
 }
+
+export const config = {
+    testOnly: false,
+    devOnly: false,
+    ownerOnly: false,
+    botPermissions: [],
+    userPermissions: [PermissionFlagsBits.BanMembers],
+    cooldown: 0,
+};
