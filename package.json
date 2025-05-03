@@ -1,5 +1,5 @@
 {
-  "name": "albion_helper",
+  "name": "albionhelper",
   "version": "0.0.1",
   "description": "A discord bot written in TypeScript, that helps in Albion guild things",
   "main": "dist/index.js",
