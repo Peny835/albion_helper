@@ -1,7 +1,7 @@
 {
-  "name": "auros.ts",
+  "name": "albion_helper",
   "version": "0.0.1",
-  "description": "A discord bot written in TypeScript",
+  "description": "A discord bot written in TypeScript, that helps in Albion guild things",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -15,7 +15,7 @@
   "keywords": [
     "discord",
     "bot",
-    "ts"
+    "ts",
   ],
   "author": "Peny825",
   "license": "MIT",
@@ -27,7 +27,7 @@
     "axios": "^1.9.0",
     "chalk": "^5.4.1",
     "discord.js": "^14.18.0",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
     "tsc": "^2.0.4"
   },
   "devDependencies": {
