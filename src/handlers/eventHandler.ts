@@ -1,32 +1,39 @@
-const log = require('../utils/log');
-const { getAllFiles } = require('../utils/getAllFiles');
+import log from '../utils/log.js';
+import { getAllFiles } from '../utils/getAllFiles.js';
+import * as path from 'path';
+import { pathToFileURL } from 'url';
 
-export function handleEvents (client: any) {
-    
-    const eventFiles = getAllFiles('src/events', '.ts');
+export default function handleEvents (client: any) {
+    const eventFiles = getAllFiles('dist/events', { extensions: ['.js']});
 
-
-    eventFiles.forEach((file: any) => {
-        const modulePath = file.replace(/\\/g, '/');
-        const event = require(`../../${modulePath}`);
-        const eventName = modulePath.split('/')[2]
-
-        if (!event.execute) {
-            log.error(`Event ${modulePath} does not have an execute function`);
-            return;
-        }
-
+    eventFiles.forEach(async (file: any) => {
         try {
-            if (event.once) {
-                client.once(eventName, (...args: any) => event.execute(...args, client));
+            const modulePath = file.replace(/\\/g, '/');
+
+            const absolutePath = path.resolve(process.cwd(), modulePath);
+
+            const fileUrl = pathToFileURL(absolutePath).href;
+
+            const event = await import(fileUrl);
+            const eventExport = event.default || event;
+
+            const eventName = modulePath.split('/').length > 2 ? modulePath.split('/')[2] : '';
+
+            if (!eventExport.execute) {
+                log.error(`Event ${modulePath} does not have an execute function`);
+                return;
             }
 
-            if (!event.once) {
-                client.on(eventName, (...args: any) => event.execute(...args, client));
+            if (eventExport.once) {
+                client.once(eventName, (...args: any) => eventExport.execute(...args, client));
             }
 
-        }catch (error) {
-            log.error(`Error loading event ${eventName}: ${error}`);
+            if (!eventExport.once) {
+                client.on(eventName, (...args: any) => eventExport.execute(...args, client));
+            }
+
+        } catch (error) {
+            log.error(`Error loading event: ${error}`);
         }
     });
 }

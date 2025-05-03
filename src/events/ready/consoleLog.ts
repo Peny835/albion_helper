@@ -1,7 +1,6 @@
+import log from '../../utils/log.js';
 
-const log = require('../../utils/log');
-
-export = {
+export default {
 
     once: true,
     execute(client: any) {

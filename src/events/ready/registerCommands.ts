@@ -1,26 +1,22 @@
-const { getAllCommands } = require("../../utils/getAllCommands");
-const { areCommandsDifferent } = require("../../utils/areCommandsDiffrent");
-const log = require("../../utils/log");
-const axios = require("axios");
+import getAllCommands from "../../utils/getAllCommands.js";
+import areCommandsDifferent from "../../utils/areCommandsDiffrent.js";
+import log from "../../utils/log.js";
+import axios from "axios";
 
-
-export = {
+export default {
     once: true,
     async execute(client: any) {
         const guild = process.env.TEST_GUILD_ID || null;
         try{
             const localCommands = await getAllCommands(client, { local: true });
-            const slashCommands = await getAllCommands(client, { local: false, guild: guild});
+            const slashCommands = await getAllCommands(client, { local: false, guild: guild || undefined });
         
-
                 for (const commandData of localCommands) {
-                    
                     const command = commandData.data.toJSON();
                     const match = slashCommands.find((c: any) => c.name === command.name);
 
                     if (match) {
                         if (areCommandsDifferent(match, command)) {
-                            
                             try {
                                 await axios.patch(guild ? `https://discord.com/api/v9/applications/${client.user.id}/guilds/${guild}/commands/${match.id}` : `https://discord.com/api/v9/applications/${client.user.id}/commands/${match.id}`, command, {
                                     headers: {
@@ -63,13 +59,10 @@ export = {
                     }
                 }
         
-                
                 for (const slashCommand of slashCommands) {
-                    
                     const localMatch = localCommands.find((c: any) => c.data.name === slashCommand.name);
                     
                     if (!localMatch) {
-                        
                         await axios.delete(guild ? `https://discord.com/api/v9/applications/${client.user.id}/guilds/${guild}/commands/${slashCommand.id}` : `https://discord.com/api/v9/applications/${client.user.id}/commands/${slashCommand.id}`, {
                             headers: {
                                 Authorization: `Bot ${client.token}`,
@@ -83,7 +76,6 @@ export = {
                                 }
                             })
                         }
-        
                     }
         }catch (error) {
             log.error(`Error registering commands: ${error}`);

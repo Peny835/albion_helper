@@ -1,10 +1,9 @@
-const { getAllCommands } = require('../../utils/getAllCommands');
+import getAllCommands from '../../utils/getAllCommands.js';
 import { MessageFlags, PermissionFlagsBits, PermissionsBitField } from 'discord.js';
 
 const cooldowns = new Map<string, Map<string, number>>();
 
-
-export = {
+export default {
     once: false,
     async execute(interaction: any, client: any) {
         try {
@@ -67,14 +66,11 @@ export = {
         }
         timestamps.set(interaction.user.id, now + cooldownAmount);
 
-
         await command.execute(interaction);
 
-
-    }catch (error) {
+    } catch (error) {
         console.error(error);
         await interaction.reply({ content: 'An error occurred while executing the command.', flags: MessageFlags.Ephemeral });
     }
     }
-
 }

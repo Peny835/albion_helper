@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import { Client } from 'discord.js';
-const { handleEvents } = require('./handlers/eventHandler');
-
+import handleEvents from './handlers/eventHandler.js';
 
 const client = new Client({
     intents: [

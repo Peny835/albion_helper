@@ -1,44 +1,36 @@
 import { ApplicationCommandOptionData, CommandInteractionOptionResolver } from 'discord.js';
-import log from './log';
+import log from './log.js';
 
-// Define interfaces based on usage
 interface CommandOptionChoice {
     name: string;
-    value: any; // Value type can vary
+    value: any;
 }
 
-// Use ApplicationCommandOptionData from discord.js if possible, or define a similar interface
-// Assuming a structure similar to discord.js ApplicationCommandOptionData
 interface CommandOption {
     name: string;
     description: string;
     required?: boolean;
-    type: number; // Use ApplicationCommandOptionType enum values if using discord.js
+    type: number; 
     choices?: CommandOptionChoice[] | null;
-    options?: CommandOption[] | null; // For nested options/subcommands
-    // Add other potential properties based on discord.js or your specific needs
+    options?: CommandOption[] | null; 
     min_value?: number | null;
     max_value?: number | null;
     min_length?: number | null;
     max_length?: number | null;
 }
 
-// Assuming ApplicationCommand structure similar to discord.js fetched commands
 interface ApplicationCommand {
     name: string;
     description: string;
     nsfw?: boolean;
-    options?: CommandOption[] | null; // Use ApplicationCommandOptionData[] if possible
+    options?: CommandOption[] | null; 
 }
 
-// Update LocalCommand structure - remove the 'data' wrapper
 interface LocalCommand {
     name: string;
     description: string;
     nsfw?: boolean;
-    options?: CommandOption[] | null; // Use ApplicationCommandOptionData[] if possible
-    // Include other properties if getAllCommands returns them, e.g., execute function
-    // execute?: (client: any, interaction: any) => Promise<void>; // Example
+    options?: CommandOption[] | null; 
 }
 
 function normalize(value: any[] | null | undefined | unknown): any[] | unknown | null {
@@ -62,9 +54,8 @@ function areOptionsDifferent(optionsA: CommandOption[] | undefined | null, optio
     if (normalizedA == null || normalizedB == null) {
         return true;
     }
-    // Now we know both are non-null arrays
     if (normalizedA.length !== normalizedB.length) {
-        log.debug(`Different options length: ${normalizedA.length} !== ${normalizedB.length}`); // Debugging length mismatch
+        log.debug(`Different options length: ${normalizedA.length} !== ${normalizedB.length}`);
         return true;
     }
 
@@ -75,61 +66,57 @@ function areOptionsDifferent(optionsA: CommandOption[] | undefined | null, optio
         const optB = normalizedB[i];
 
         if (optA.name !== optB.name) {
-            log.debug(`Different option name: ${optA.name} !== ${optB.name}`); // Debugging name mismatch
+            log.debug(`Different option name: ${optA.name} !== ${optB.name}`);
             return true;
         }
         if (optA.description !== optB.description) {
-            log.debug(`Different option description: ${optA.description} !== ${optB.description}`); // Debugging description mismatch
+            log.debug(`Different option description: ${optA.description} !== ${optB.description}`);
             return true;
         }
         if (isFalsy(optA.required) !== isFalsy(optB.required)) {
-            log.debug(`Different option required: ${optA.required} !== ${optB.required}`); // Debugging required mismatch
+            log.debug(`Different option required: ${optA.required} !== ${optB.required}`);
             return true;
         }
 
-        // Standardize min_value and max_value before comparison
         if (standardize(optA.min_value) !== standardize(optB.min_value)) {
-            log.debug(`Different option min_value: ${standardize(optA.min_value)} !== ${standardize(optB.min_value)}`); // Debugging min_value mismatch
+            log.debug(`Different option min_value: ${standardize(optA.min_value)} !== ${standardize(optB.min_value)}`);
             return true;
         }
         if (standardize(optA.max_value) !== standardize(optB.max_value)) {
-            log.debug(`Different option max_value: ${standardize(optA.max_value)} !== ${standardize(optB.max_value)}`); // Debugging max_value mismatch
+            log.debug(`Different option max_value: ${standardize(optA.max_value)} !== ${standardize(optB.max_value)}`);
             return true;
         }
 
-        // Standardize min_length and max_length before comparison
         if (standardize(optA.min_length) !== standardize(optB.min_length)) {
-            log.debug(`Different option min_length: ${standardize(optA.min_length)} !== ${standardize(optB.min_length)}`); // Debugging min_length mismatch
+            log.debug(`Different option min_length: ${standardize(optA.min_length)} !== ${standardize(optB.min_length)}`);
             return true;
         }
         if (standardize(optA.max_length) !== standardize(optB.max_length)) {
-            log.debug(`Different option max_length: ${standardize(optA.max_length)} !== ${standardize(optB.max_length)}`); // Debugging max_length mismatch
+            log.debug(`Different option max_length: ${standardize(optA.max_length)} !== ${standardize(optB.max_length)}`);
             return true;
         }
 
         if (optA.type !== optB.type) {
-            log.debug(`Different option type: ${optA.type} !== ${optB.type}`); // Debugging type mismatch
+            log.debug(`Different option type: ${optA.type} !== ${optB.type}`);
             return true;
         }
-
 
         const choicesA = normalize(optA.choices) as CommandOptionChoice[] | null;
         const choicesB = normalize(optB.choices) as CommandOptionChoice[] | null;
 
         if (choicesA || choicesB) {
             if (choicesA == null || choicesB == null || choicesA.length !== choicesB.length) {
-                log.debug(`Different option choices length or one is null`); // Debugging choices mismatch
+                log.debug(`Different option choices length or one is null`);
                 return true;
             }
 
             for (let j = 0; j < choicesA.length; j++) {
                 if (choicesA[j].name !== choicesB[j].name || choicesA[j].value !== choicesB[j].value) {
-                    log.debug(`Different choice: ${choicesA[j].name} !== ${choicesB[j].name}`); // Debugging choice mismatch
+                    log.debug(`Different choice: ${choicesA[j].name} !== ${choicesB[j].name}`);
                     return true;
                 }
             }
         }
-
 
         if (areOptionsDifferent(optA.options, optB.options)) {
             return true;
@@ -139,22 +126,20 @@ function areOptionsDifferent(optionsA: CommandOption[] | undefined | null, optio
     return false;
 }
 
-
 const compareCommands = (applicationCommand: ApplicationCommand, localCommand: LocalCommand): boolean => {
 
     if (applicationCommand.name !== localCommand.name) {
-        log.debug(`Different name: ${applicationCommand.name} !== ${localCommand.name}`); // Debugging name mismatch
+        log.debug(`Different name: ${applicationCommand.name} !== ${localCommand.name}`);
         return true;
     }
     if (applicationCommand.description !== localCommand.description) {
-        log.debug(`Different description: ${applicationCommand.description} !== ${localCommand.description}`); // Debugging description mismatch
+        log.debug(`Different description: ${applicationCommand.description} !== ${localCommand.description}`);
         return true;
     }
     if (isFalsy(applicationCommand.nsfw) !== isFalsy(localCommand.nsfw)) {
-        log.debug(`Different nsfw: ${applicationCommand.nsfw} !== ${localCommand.nsfw}`); // Debugging nsfw mismatch
+        log.debug(`Different nsfw: ${applicationCommand.nsfw} !== ${localCommand.nsfw}`);
         return true;
     }
-
 
     return areOptionsDifferent(
         applicationCommand.options as CommandOption[] | undefined | null,
@@ -162,7 +147,6 @@ const compareCommands = (applicationCommand: ApplicationCommand, localCommand: L
     );
 };
 
-
-module.exports = {
-    areCommandsDifferent: compareCommands 
-};
+export default function areCommandsDifferent(applicationCommand: ApplicationCommand, localCommand: LocalCommand): boolean {
+    return compareCommands(applicationCommand, localCommand);
+}

@@ -1,12 +1,10 @@
-import fs from 'fs';
-import path from 'path';
-
+import * as fs from 'fs';
+import * as path from 'path';
 
 export interface GetAllFilesOptions {
   extensions?: string[];
   includeHidden?: boolean;
 }
-
 
 export function getAllFiles(
   dirPath: string, 
@@ -19,7 +17,6 @@ export function getAllFiles(
     const files = fs.readdirSync(dirPath);
 
     for (const file of files) {
-
       if (!includeHidden && file.startsWith('.')) {
         continue;
       }
@@ -30,10 +27,8 @@ export function getAllFiles(
         const stats = fs.statSync(filePath);
         
         if (stats.isDirectory()) {
-
           getAllFiles(filePath, options, arrayOfFiles);
         } else {
-
           if (extensions && extensions.length > 0) {
             const fileExt = path.extname(file).toLowerCase();
             if (extensions.includes(fileExt)) {
