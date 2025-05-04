@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
       "target": "ES2022",
-      "module": "ES2022",
-      "moduleResolution": "Node",
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
       "strict": true,
       "noImplicitAny": true,
       "declaration": false,
@@ -10,7 +10,8 @@
       "strictNullChecks": true,
       "resolveJsonModule": true,
       "outDir": "dist",
-      "baseUrl": "src/"
+      "baseUrl": "src/",
+      "esModuleInterop": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
