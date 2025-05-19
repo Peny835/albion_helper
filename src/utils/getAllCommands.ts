@@ -3,6 +3,7 @@ import { getAllFiles } from './getAllFiles.js';
 import * as path from 'path';
 import { pathToFileURL } from 'url';
 import axios from 'axios';
+import { fileURLToPath } from 'url';
 
 export interface getAllCommandsOptions {
     local?: boolean;
@@ -17,7 +18,11 @@ export default async function getAllCommands (client: any, options: getAllComman
     try{
         if (local) {
 
-            const commandFiles = getAllFiles('dist/commands', { extensions: ['.js'] });
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+        
+            const eventsPath = path.join(__dirname, '..', 'commands');
+            const commandFiles = getAllFiles(eventsPath, { extensions: ['.ts', '.js'] });
             
             for (const file of commandFiles) {
                 try {
